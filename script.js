@@ -2,12 +2,17 @@ let courses = [];
 const submitButton = document.querySelector('#submit-button');
 const subjectContainer = document.getElementById('subject-container');
 const newButton = document.createElement('button');
+const resultContainer = document.getElementById('displayResult');
+
 newButton.classList.add('buttonClick')
 newButton.innerText = "Show Results"
 
-submitButton.addEventListener('click', () => {
-    const numberOfSub = parseInt(document.querySelector('#credit').value);
+let gradeS = ["S", "A", "B", "C", "D", "E", "F"];
+let gradeValues = [10, 9, 8, 7, 6, 5, 0];
 
+// const numberOfSub = 0;
+submitButton.addEventListener('click', () => {
+    const numberOfSub = parseInt(document.querySelector('#credit').value)
     addSubjects(numberOfSub);
     
     subjectContainer.append(newButton);
@@ -25,6 +30,7 @@ function addSubjects(num) {
         creditInput.setAttribute("name", "credit");
         creditLabel.setAttribute("for", "credit");
         creditLabel.innerText = `Credits `;
+        creditInput.classList.add('creditInput');
 
         newDiv.append(creditLabel);
         newDiv.append(creditInput);
@@ -35,6 +41,7 @@ function addSubjects(num) {
         gradeSelect.setAttribute("name", "grade");
         gradeLabel.setAttribute("for", "grade");
         gradeLabel.innerText = ` Grade `;
+        gradeSelect.classList.add('gradeSelect');
 
         optionsForGrades(gradeSelect);
 
@@ -48,52 +55,43 @@ function addSubjects(num) {
 
 function optionsForGrades (gradeSelect) {
 
-/* <div id="grades">
-    <label for="grade">Grade:</label>
-    <select id="grade" name="grade">
-        <option value="10.0">S</option>
-        <option value="9.0">A</option>
-        <option value="8.0">B</option>
-        <option value="7.0">C</option>
-        <option value="6.0">D</option>
-        <option value="5.0">E</option>
-     </select>
-</div> */
-
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.setAttribute('selected', true);
+    defaultOption.setAttribute('disabled', true);
+    defaultOption.setAttribute('hidden', true);
+    defaultOption.text = "No options selected";
+    gradeSelect.append(defaultOption);
+    for(let i = 0; i<7; i++) {
+        const newOption = document.createElement('option');
+        newOption.value = gradeValues[i];
+        newOption.text = `${gradeS[i]} - Grade`
+        gradeSelect.append(newOption);
+    }
 
 }
 
-// function calculateCGPA() {
-//     const grade = parseFloat(document.getElementById('grade').value);
-//     const credit = parseInt(document.getElementById('credit').value);
+newButton.addEventListener('click' ,() => {
+    calculateCGPA();
+    resultContainer.style.display = 'block';
 
-//     if (isNaN(credit) || credit <= 0) {
-//         alert('Please enter a valid credit hour.');
-//         return;
-//     }
+})
 
-//     courses.push({ grade, credit });
 
-//     updateCoursesList();
-//     updateCGPA();
-// }
 
-// function updateCoursesList() {
-//     const coursesList = document.getElementById('courses-list');
-//     coursesList.innerHTML = '';
+function calculateCGPA() {
+    const creditsOfAll = document.querySelectorAll('.creditInput');
+    const gradesOfAll = document.querySelectorAll('.gradeSelect');
+    const numberOfSub = creditsOfAll.length
+    let ans = 0;
+    let totalCredits = 0;
 
-//     courses.forEach((course, index) => {
-//         const listItem = document.createElement('li');
-//         listItem.textContent = `Course ${index + 1}: Grade ${course.grade}, Credit ${course.credit}`;
-//         coursesList.appendChild(listItem);
-//     });
-// }
+    for(let i = 0; i<numberOfSub; i++) {
+        totalCredits += parseInt(creditsOfAll[i].value);
+        ans += parseFloat(creditsOfAll[i].value) * parseInt(gradesOfAll[i].value);
+    }
+    const cgpa = ans / totalCredits;
+    document.getElementById('cgpa').textContent = cgpa.toFixed(2);
 
-// function updateCGPA() {
-//     const totalCredits = courses.reduce((total, course) => total + course.credit, 0);
-//     const totalGradePoints = courses.reduce((total, course) => total + course.grade * course.credit, 0);
+}
 
-//     const cgpa = totalGradePoints / totalCredits;
-
-//     document.getElementById('cgpa').textContent = cgpa.toFixed(2);
-// }

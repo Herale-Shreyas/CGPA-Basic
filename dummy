@@ -1,0 +1,14 @@
+
+<div id="grades">
+    <label for="grade">Grade:</label>
+    <select id="grade" name="grade">
+        <option value="10.0">S</option>
+        <option value="9.0">A</option>
+        <option value="8.0">B</option>
+        <option value="7.0">C</option>
+        <option value="6.0">D</option>
+        <option value="5.0">E</option>
+        <!-- Add more grade options as needed -->
+     </select>
+</div>
+
